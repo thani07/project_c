@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SRK Catering website
 
-## Getting Started
+Premium South Indian catering site built with Next.js (App Router), React, TypeScript (strict) and Tailwind CSS v4.
 
-First, run the development server:
+## Run
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000
+npm run build && npm start
+npm run lint
+npm run typecheck
+npm test           # unit checks for WhatsApp URL building and form validation
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Pages
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+`/` Home, `/menu`, `/services`, `/gallery`, `/about`, `/contact` (enquiry form), plus `/privacy`, `/terms`, `/credits`, a custom 404, `sitemap.xml` and `robots.txt`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Things you must configure before launch
 
-## Learn More
+| What | Where |
+|---|---|
+| Phone, WhatsApp number, email, address, service area, social links | `src/config/site.ts` (all empty on purpose; empty values are hidden, nothing is invented) |
+| Site URL for metadata | `NEXT_PUBLIC_SITE_URL` env var |
+| Real enquiry delivery | `src/lib/submitEnquiry.ts`, then set `enquiryMode: "live"` in `src/config/site.ts`. Until then the form is an **explicit demo** and says it sent nothing. |
+| Menu, packages, services, gallery | `src/data/*.ts`. Prices and guest ranges are illustrative samples. |
+| Testimonials | `src/data/testimonials.ts` (section is hidden while empty) |
+| Privacy Policy and Terms | `src/app/privacy`, `src/app/terms` are templates and need business and legal review |
+| Non-vegetarian dishes | Add items with `category: "non-veg"` in `src/data/menu.ts`; the category and diet filter appear automatically |
 
-To learn more about Next.js, take a look at the following resources:
+## Images
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+All photographs are illustrative stock from Wikimedia Commons (CC / public domain), downloaded to `public/images` and credited at `/credits`. They do not show SRK Catering events. Replace them with the business's own photography: update `scripts/images.manifest.json` or add files, then edit alt text and focal points in `src/data/images.ts`. `scripts/fetch-images.mjs` and `scripts/build-image-data.mjs` regenerate the files and `src/data/image-files.generated.ts`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Not included
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The optional `/admin` dashboard was deliberately left out: a useful one needs real authentication, server-side authorization and a database, none of which exist yet.

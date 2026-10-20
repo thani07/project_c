@@ -1,26 +1,113 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* SRK Catering design tokens */
+@theme {
+  /* Brand colours */
+  --color-maroon: #6f1d2c;
+  --color-maroon-deep: #54141f;
+  --color-gold: #c69a45;
+  --color-gold-deep: #8a6420; /* AA-safe gold for text on ivory */
+  --color-ivory: #f8f1e5;
+  --color-ivory-deep: #efe4d0;
+  --color-leaf: #355640;
+  --color-charcoal: #29231f;
+  --color-ink-soft: #5b4f47; /* secondary text, AA on ivory */
+  --color-line: #d9c9a8;
+
+  /* Typography */
+  --font-display: var(--font-playfair), "Playfair Display", Georgia, serif;
+  --font-sans: var(--font-inter), "Inter", system-ui, sans-serif;
+
+  /* Radii, shadows, motion */
+  --radius-card: 0.375rem;
+  --shadow-soft: 0 1px 2px rgb(41 35 31 / 0.05), 0 12px 32px -12px rgb(41 35 31 / 0.18);
+  --shadow-lift: 0 2px 4px rgb(41 35 31 / 0.06), 0 24px 48px -16px rgb(41 35 31 / 0.28);
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Content widths */
+  --container-page: 80rem;
+  --container-prose: 40rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
   }
+  body {
+    background: var(--color-ivory);
+    color: var(--color-charcoal);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  p { text-wrap: pretty; }
+  :focus-visible {
+    outline: 2px solid var(--color-maroon);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  .on-dark :focus-visible, [data-on-dark] :focus-visible {
+    outline-color: var(--color-gold);
+  }
+  ::selection { background: var(--color-gold); color: var(--color-charcoal); }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .container-page {
+    width: 100%;
+    max-width: var(--container-page);
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 640px) { .container-page { padding-inline: 2rem; } }
+  @media (min-width: 1024px) { .container-page { padding-inline: 3rem; } }
+
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-gold-deep);
+  }
+
+  /* Subtle kolam-inspired divider: line, diamond, line */
+  .ornament {
+    display: flex; align-items: center; gap: 0.75rem; color: var(--color-gold);
+  }
+  .ornament::before, .ornament::after {
+    content: ""; height: 1px; flex: 1; background: currentColor; opacity: 0.55;
+  }
+  .ornament > span {
+    width: 7px; height: 7px; transform: rotate(45deg); border: 1px solid currentColor;
+  }
+
+  .img-zoom img { transition: transform 900ms var(--ease-out-soft); }
+  .img-zoom:hover img { transform: scale(1.045); }
+}
+
+/* Reveal-on-scroll (enhanced by <Reveal/>; content is visible without JS) */
+.reveal-ready { opacity: 0; transform: translateY(18px); }
+.reveal-ready.is-visible {
+  opacity: 1; transform: none;
+  transition: opacity 800ms var(--ease-out-soft), transform 800ms var(--ease-out-soft);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+  .reveal-ready { opacity: 1; transform: none; }
+  .img-zoom:hover img { transform: none; }
 }

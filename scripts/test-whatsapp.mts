@@ -1,0 +1,14 @@
+import { buildWhatsAppUrl, buildEnquiryMessage, normaliseWhatsAppNumber } from "../src/lib/whatsapp";
+import { validateEnquiry, isValidPhone } from "../src/lib/validation";
+import assert from "node:assert/strict";
+assert.equal(buildWhatsAppUrl("hi"), null, "no number configured => null");
+assert.equal(normaliseWhatsAppNumber("+91 98765-43210"), "919876543210");
+const url = buildWhatsAppUrl("Name: A & B\nGuests: 100–250", "+91 98765 43210")!;
+assert.equal(url, "https://wa.me/919876543210?text=Name%3A%20A%20%26%20B%0AGuests%3A%20100%E2%80%93250");
+assert.ok(isValidPhone("+91 98765 43210") && isValidPhone("9876543210") && isValidPhone("09876543210"));
+assert.ok(!isValidPhone("12345") && !isValidPhone("5876543210"));
+const msg = buildEnquiryMessage({ name: "Asha", eventType: "Wedding" });
+assert.ok(msg.includes("Name: Asha") && !msg.includes("Phone:"));
+const errs = validateEnquiry({ name: "", phone: "", email: "", eventType: "", eventDate: "", guests: "", foodPreference: "", servingStyle: "", packageId: "", location: "", budget: "", notes: "", consent: false });
+assert.equal(Object.keys(errs).length, 9);
+console.log("all unit checks passed");

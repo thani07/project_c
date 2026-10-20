@@ -1,0 +1,6 @@
+[build]
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "22"
+  # Set NEXT_PUBLIC_SITE_URL in the Netlify UI to your final site URL.
